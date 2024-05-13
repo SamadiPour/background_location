@@ -26,7 +26,7 @@ class Location {
   /// Parse the [Location] from a Map.
   ///
   /// [time] gets converted from a unix timestamp in milliseconds.
-  factory Location.fromMap(Map<String, Object?> map) => Location(
+  factory Location.fromJson(Map<String, Object?> map) => Location(
         longitude: map['longitude'] as double?,
         latitude: map['latitude'] as double?,
         altitude: map['altitude'] as double?,

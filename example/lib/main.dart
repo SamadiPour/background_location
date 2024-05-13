@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:background_location/background_location.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -18,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   String bearing = 'waiting...';
   String speed = 'waiting...';
   String time = 'waiting...';
-  bool? serviceRunning = null;
+  bool? serviceRunning;
 
   @override
   void initState() {
@@ -66,17 +68,17 @@ class _MyAppState extends State<MyApp> {
                     await BackgroundLocation.startLocationService(
                         distanceFilter: 20);
                     BackgroundLocation.getLocationUpdates((location) {
-                      setState(() {
-                        latitude = location.latitude.toString();
-                        longitude = location.longitude.toString();
-                        accuracy = location.accuracy.toString();
-                        altitude = location.altitude.toString();
-                        bearing = location.bearing.toString();
-                        speed = location.speed.toString();
-                        time = DateTime.fromMillisecondsSinceEpoch(
-                                location.time.toInt())
-                            .toString();
-                      });
+                      if (mounted) {
+                        setState(() {
+                          latitude = location.latitude.toString();
+                          longitude = location.longitude.toString();
+                          accuracy = location.accuracy.toString();
+                          altitude = location.altitude.toString();
+                          bearing = location.bearing.toString();
+                          speed = location.speed.toString();
+                          time = location.time.toString();
+                        });
+                      }
                       log('''\n
                         Latitude:  $latitude
                         Longitude: $longitude
@@ -98,9 +100,11 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                   onPressed: () {
                     BackgroundLocation.isServiceRunning().then((value) {
-                      setState(() {
-                        serviceRunning = value;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          serviceRunning = value;
+                        });
+                      }
                       log("Is Running: $value");
                     });
                   },
